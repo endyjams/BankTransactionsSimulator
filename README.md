@@ -1,6 +1,6 @@
 # bank_transactions
 
-App using Flutter framework. The applications simulate bank transactions with client requisitions. 
+App using Flutter framework. The application simulate bank transactions with client requisitions. 
 
 ## Getting Started
 
