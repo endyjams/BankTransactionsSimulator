@@ -2,24 +2,7 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
       home: Scaffold(
-        body: Column(
-          children: const [
-            Card(
-              child: ListTile(
-                leading: Icon(Icons.monetization_on),
-                title: Text('haha'),
-                subtitle: Text('haha2'),
-              ),
-            ),
-            Card(
-              child: ListTile(
-                leading: Icon(Icons.monetization_on),
-                title: Text('haha'),
-                subtitle: Text('haha2'),
-              ),
-            ),
-          ],
-        ),
+        body: const TransactionList(),
         appBar: AppBar(
           title: const Text("Transactions"),
         ),
@@ -29,3 +12,40 @@ void main() => runApp(MaterialApp(
         ),
       ),
     ));
+
+class TransactionList extends StatelessWidget {
+  const TransactionList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        TransactionItem(Transaction('100.0', '100')),
+      ],
+    );
+  }
+}
+
+class TransactionItem extends StatelessWidget {
+  final Transaction _transaction;
+
+  TransactionItem(this._transaction);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: Icon(Icons.monetization_on),
+        title: Text(_transaction.value),
+        subtitle: Text(_transaction.accountNumber),
+      ),
+    );
+  }
+}
+
+class Transaction {
+  final String value;
+  final String accountNumber;
+
+  Transaction(this.value, this.accountNumber);
+}
