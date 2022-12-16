@@ -1,6 +1,6 @@
-# bank_transactions
+# BankTransactions
 
-A new Flutter project.
+- Bank Transaction Simulation with Client Requisitions.
 
 ## Getting Started
 
