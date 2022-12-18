@@ -1,27 +1,48 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MaterialApp(
-      home: Scaffold(
-        body: const TransactionList(),
-        appBar: AppBar(
-          title: const Text("Transactions"),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
-      ),
-    ));
+void main() => runApp(TransactionApp());
 
-class TransactionList extends StatelessWidget {
-  const TransactionList({Key? key}) : super(key: key);
-
+class TransactionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        TransactionItem(Transaction('100.0', '100')),
-      ],
+    return MaterialApp(
+      home: Scaffold(
+        body: TransactionForm(),
+      ),
+    );
+  }
+}
+
+class TransactionForm extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Creating Transfer'),
+      ),
+      body: Text('Test'),
+    );
+  }
+}
+
+class TransactionList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Transactions"),
+      ),
+      body: Column(
+        children: <Widget>[
+          TransactionItem(Transaction('100.0', '100')),
+          TransactionItem(Transaction('200.0', '200')),
+          TransactionItem(Transaction('300.0', '300')),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
