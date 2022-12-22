@@ -1,3 +1,3 @@
 # BankTransactions
 
-- Simple Bank Transaction Simulation with Client Requisitions.
+- Simple Bank Transaction App Simulation with Client Requisitions.
