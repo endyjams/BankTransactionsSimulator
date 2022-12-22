@@ -14,6 +14,10 @@ class TransactionApp extends StatelessWidget {
 }
 
 class TransactionForm extends StatelessWidget {
+
+  final TextEditingController _controllerAccountNumber = TextEditingController();
+  final TextEditingController _controllerValue = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,9 +29,10 @@ class TransactionForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: _controllerAccountNumber,
               style: TextStyle(fontSize: 24.0),
               decoration: InputDecoration(
-                labelText: 'Número da conta',
+                labelText: 'Account Number',
                 hintText: '0000',
               ),
               keyboardType: TextInputType.number,
@@ -36,6 +41,7 @@ class TransactionForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
+              controller: _controllerValue,
               style: TextStyle(fontSize: 24.0),
               decoration: InputDecoration(
                 icon: Icon(Icons.monetization_on),
@@ -45,7 +51,17 @@ class TransactionForm extends StatelessWidget {
               keyboardType: TextInputType.number,
             ),
           ),
-          ElevatedButton(onPressed: () {}, child: Text('Confirm'))
+          ElevatedButton(
+            child: Text('Confirm'),
+            onPressed: () {
+              final int? accountNumber = int.tryParse(_controllerAccountNumber.text);
+              final double? value = double.tryParse(_controllerValue.text);
+
+              if (accountNumber != null && value != null){
+                final newTransaction = Transaction(value, accountNumber);
+              }
+            },
+          )
         ],
       ),
     );
@@ -61,9 +77,9 @@ class TransactionList extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          TransactionItem(Transaction('100.0', '100')),
-          TransactionItem(Transaction('200.0', '200')),
-          TransactionItem(Transaction('300.0', '300')),
+          TransactionItem(Transaction(100.0, 1000)),
+          TransactionItem(Transaction(200.0, 2000)),
+          TransactionItem(Transaction(300.0, 3000)),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -84,16 +100,21 @@ class TransactionItem extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Icon(Icons.monetization_on),
-        title: Text(_transaction.value),
-        subtitle: Text(_transaction.accountNumber),
+        title: Text(_transaction.value.toString()),
+        subtitle: Text(_transaction.accountNumber.toString()),
       ),
     );
   }
 }
 
 class Transaction {
-  final String value;
-  final String accountNumber;
+  final double value;
+  final int accountNumber;
 
   Transaction(this.value, this.accountNumber);
+
+  @override
+  String toString() {
+    return 'Transaction{value: $value, accountNumber: $accountNumber}';
+  }
 }
