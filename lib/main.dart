@@ -6,16 +6,20 @@ class TransactionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: TransactionForm(),
-      ),
+      home: TransactionList(),
     );
   }
 }
 
-class TransactionForm extends StatelessWidget {
+class TransactionForm extends StatefulWidget {
+  @override
+  State<TransactionForm> createState() => _TransactionFormState();
+}
+
+class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _controllerAccountNumber =
       TextEditingController();
+
   final TextEditingController _controllerValue = TextEditingController();
 
   @override
@@ -24,34 +28,40 @@ class TransactionForm extends StatelessWidget {
       appBar: AppBar(
         title: Text('Creating Transfer'),
       ),
-      body: Column(
-        children: <Widget>[
-          Editor(
-            controller: _controllerAccountNumber,
-            hint: '0000',
-            label: 'Account Number',
-          ),
-          Editor(
-            controller: _controllerAccountNumber,
-            hint: '0000',
-            label: 'Account Number',
-            icon: Icons.monetization_on,
-          ),
-          ElevatedButton(
-            child: Text('Confirm'),
-            onPressed: () {
-              final int? accountNumber =
-                  int.tryParse(_controllerAccountNumber.text);
-              final double? value = double.tryParse(_controllerValue.text);
-
-              if (accountNumber != null && value != null) {
-                final newTransaction = Transaction(value, accountNumber);
-              }
-            },
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Editor(
+              controller: _controllerAccountNumber,
+              hint: '0000',
+              label: 'Account Number',
+            ),
+            Editor(
+              controller: _controllerValue,
+              hint: '0.00',
+              label: 'Value',
+              icon: Icons.monetization_on,
+            ),
+            ElevatedButton(
+              child: Text('Confirm'),
+              onPressed: () => _createTransaction(context),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  void _createTransaction(BuildContext context) {
+    final int? accountNumber = int.tryParse(_controllerAccountNumber.text);
+    final double? value = double.tryParse(_controllerValue.text);
+
+    if (accountNumber != null && value != null) {
+      final newTransaction = Transaction(value, accountNumber);
+      debugPrint('Creating Transaction');
+      debugPrint('$newTransaction');
+      Navigator.pop(context, newTransaction);
+    }
   }
 }
 
@@ -81,23 +91,48 @@ class Editor extends StatelessWidget {
   }
 }
 
-class TransactionList extends StatelessWidget {
+class TransactionList extends StatefulWidget {
+  final List<Transaction> _transactions = [];
+
+  @override
+  State<TransactionList> createState() => _TransactionListState();
+}
+
+class _TransactionListState extends State<TransactionList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Transactions"),
+        title: Text("Transactions"),
       ),
-      body: Column(
-        children: <Widget>[
-          TransactionItem(Transaction(100.0, 1000)),
-          TransactionItem(Transaction(200.0, 2000)),
-          TransactionItem(Transaction(300.0, 3000)),
-        ],
+      body: ListView.builder(
+        itemCount: widget._transactions.length,
+        itemBuilder: (BuildContext context, int index) {
+          final transaction = widget._transactions[index];
+          return TransactionItem(transaction);
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
+        onPressed: () {
+          final Future future =
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return TransactionForm();
+          }));
+          future.then(
+            (receivedTransaction) {
+              Future.delayed(Duration(seconds: 1), () {
+                debugPrint('got on future then');
+                debugPrint('$receivedTransaction');
+                if (receivedTransaction != null) {
+                  setState(() {
+                    widget._transactions.add(receivedTransaction);
+                  });
+                }
+              });
+            },
+          );
+        },
       ),
     );
   }
