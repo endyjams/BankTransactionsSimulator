@@ -15,7 +15,7 @@
 - Functions Extraction
 - Screens Navigation
 - Code Refactoring
-- Code debugging
+- Code Debugging
 - Separate Responsabilities
   - Screens
   - Components
